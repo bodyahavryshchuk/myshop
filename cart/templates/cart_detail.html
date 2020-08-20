@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+
+            <div class="col-md-7">
+                <!-- Billing Details -->
+                <div class="billing-details">
+                    <div class="section-title">
+                        <h3 class="title">Billing address</h3>
+                    </div>
+                    <form action="." method="post" class="order-form">
+                        {{ form.as_p }}
+                        <!--								<p><input type="submit" value="Place order"></p>p-->
+                        {% csrf_token %}
+                        <input type="submit" value="Оформить заказ" class="primary-btn order-submit">
+						</form>
+                        <!--							<div class="form-group">-->
+                        <!--								<input class="input" type="text" name="first-name" placeholder="First Name">-->
+                        <!--							</div>-->
+                        <!--							<div class="form-group">-->
+                        <!--								<input class="input" type="text" name="last-name" placeholder="Last Name">-->
+                        <!--							</div>-->
+                        <!--							<div class="form-group">-->
+                        <!--								<input class="input" type="email" name="email" placeholder="Email">-->
+                        <!--							</div>-->
+                        <!--							<div class="form-group">-->
+                        <!--								<input class="input" type="text" name="address" placeholder="Address">-->
+                        <!--							</div>-->
+                        <!--							<div class="form-group">-->
+                        <!--								<input class="input" type="text" name="city" placeholder="City">-->
+                        <!--							</div>-->
+                        <!--							<div class="form-group">-->
+                        <!--								<input class="input" type="text" name="country" placeholder="Country">-->
+                        <!--							</div>-->
+                        <!--							<div class="form-group">-->
+                        <!--								<input class="input" type="text" name="zip-code" placeholder="ZIP Code">-->
+                        <!--							</div>-->
+                        <!--							<div class="form-group">-->
+                        <!--								<input class="input" type="tel" name="tel" placeholder="Telephone">-->
+                        <!--							</div>-->
+
+                </div>
+                <!-- /Billing Details -->
+
+
+            </div>
+
+            <!-- Order Details -->
+            <div class="col-md-5 order-details">
+                <div class="section-title text-center">
+                    <h3 class="title">Your Order</h3>
+                </div>
+                <div class="order-summary">
+                    <div class="order-col">
+                        <div><strong>PRODUCT</strong></div>
+                        <div><strong>TOTAL</strong></div>
+                    </div>
+                    <div class="order-products">
+                        {% for item in cart %}
+                        {% with product=item.product %}
+
+                        <div class="order-col">
+                            <div>
+                                <a href="{{ product.get_absolute_url }}">{{ product.name }}</a></div>
+                            <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                                {{ item.update_quantity_form.quantity }}
+                                {{ item.update_quantity_form.update }}
+                                <input type="submit" value="Обновить">
+                                {% csrf_token %}
+                            </form>
+                            <div>${{ item.price }}</div>
+                            <a href="{% url 'cart:cart_remove' product.id %}">Удалить</a>
+                        </div>
+                        {% endwith %}
+                        {% endfor %}
+
+                    </div>
+                    <div class="order-col">
+                        <div>Shiping</div>
+                        <div><strong>FREE</strong></div>
+                    </div>
+                    <div class="order-col">
+                        <div><strong>TOTAL</strong></div>
+                        <div><strong class="order-total">${{ cart.get_total_price }}</strong></div>
+                    </div>
+                </div>
+
+
+                <!-- /Order Details -->
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /SECTION -->
+
+    {% endblock %}
